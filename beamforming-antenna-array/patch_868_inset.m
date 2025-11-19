@@ -3,10 +3,10 @@
 % Based on: Simple Patch Antenna Tutorial from openEMS
 % Modified for:
 %   - f0 = 868 MHz
-%   - Patch width  = 102 mm (x-direction)
-%   - Patch length = 79.3  mm (y-direction)
-%   - Inset feed depth = 27 mm
-%   - Microstrip feed line with 3 mm width, 0.5 mm gap in notch
+%   - Patch width  = 63 mm (x-direction)
+%   - Patch length = 80  mm (y-direction)
+%   - Inset feed depth = 25 mm
+%   - Microstrip feed line with 3 mm width, 1mm gap in notch
 %
 % Tested style:
 %  - Matlab / Octave
@@ -23,9 +23,9 @@ physical_constants;
 unit = 1e-3; % all length in mm
 
 %% Patch geometry
-patch.width   = 102;   % x-direction
-patch.length  = 79.3;  % y-direction (tuned for 868 MHz with εᵣ=4.3)
-patch.inset   = 27;    % inset depth along +y from bottom edge
+patch.width   = 63;    % x-direction (reduced from 63mm to lower input impedance)
+patch.length  = 80;  % y-direction (tuned for 868 MHz with εᵣ=4.3)
+patch.inset   = 25;    % inset depth along +y from bottom edge (decreased +2mm to lower input impedance)
 
 %% Substrate (FR-4-ish)
 % FR-4 εᵣ varies with frequency:
@@ -44,7 +44,7 @@ substrate.kappa     = tandelta * 2*pi*f0 * EPS0 * substrate.epsR; % conductive l
 
 %% Feed (microstrip inset)
 feed.R       = 50;  % lumped port impedance
-feed.width   = 3;   % microstrip width [mm]
+feed.width   = 3; % microstrip width [mm] (50Ω line on 1.6mm FR4 with εr=4.3)
 feed.gap     = 1.0; % gap to patch in notch [mm] (increased from 0.5 for better meshing)
 feed.extra   = 20;  % line length extending outside patch [mm]
 
@@ -262,10 +262,21 @@ drawnow
 [~, f_res_ind] = min(abs(s11));   % robust index
 f_res = freq(f_res_ind);
 
+disp(['Resonant frequency: ' num2str(f_res/1e6) ' MHz']);
+disp(['S11 at resonance: ' num2str(20*log10(abs(s11(f_res_ind)))) ' dB']);
+
 % calculate the far field at phi=0 degrees and at phi=90 degrees
 disp( 'calculating far field at phi=[0 90] deg...' );
-nf2ff = CalcNF2FF(nf2ff, Sim_Path, f_res, ...
-                  (-180:2:180)*pi/180, [0 90]*pi/180);
+
+try
+    nf2ff = CalcNF2FF(nf2ff, Sim_Path, f_res, ...
+                      (-180:2:180)*pi/180, [0 90]*pi/180);
+catch err
+    disp('Far-field calculation failed with error:');
+    disp(err.message);
+    disp('Skipping far-field plots. S11 and impedance data are still valid.');
+    return;  % Exit script but keep plots
+end
 
 % display power and directivity
 disp( ['radiated power: Prad = ' num2str(nf2ff.Prad) ' Watt'] );
