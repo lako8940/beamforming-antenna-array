@@ -1,0 +1,80 @@
+868 MHz Inset-Fed Patch Antenna - Manufacturing Specifications
+================================================================
+
+FINAL TUNED DIMENSIONS (from openEMS simulation):
+-------------------------------------------------
+Patch Width (X):        102.0 mm
+Patch Length (Y):       79.3 mm
+Inset Depth:            27.0 mm
+Notch Width:            5.0 mm (3mm feed + 2×1mm gaps)
+Feed Line Width:        3.0 mm
+Feed Line Extension:    20.0 mm (beyond patch edge)
+
+SUBSTRATE SPECIFICATIONS:
+------------------------
+Material:               FR-4
+Thickness:              1.6 mm
+Relative Permittivity:  4.3 @ 868 MHz
+Loss Tangent:           0.02
+Board Size:             142 × 119.3 mm (minimum)
+                        (102 + 40 margin) × (79.3 + 40 margin)
+
+COPPER SPECIFICATIONS:
+---------------------
+Copper Weight:          35 μm (1 oz) standard
+Top Layer:              Patch antenna + feed line
+Bottom Layer:           Solid ground plane
+Finish:                 HASL or ENIG (both work fine)
+
+FEED POINT:
+-----------
+Location:               Center of feed line, 10mm below patch
+Type:                   SMA edge connector or U.FL connector
+Impedance:              50 Ω
+
+PCB LAYER STACKUP:
+-----------------
+Layer 1 (Top):     Copper (patch + feed) - 35 μm
+Core:              FR-4 dielectric - 1.6 mm
+Layer 2 (Bottom):  Copper (ground plane) - 35 μm
+
+DESIGN NOTES FOR PCB LAYOUT:
+----------------------------
+1. The patch is centered on the board
+2. Feed line extends from bottom edge toward patch center
+3. Inset notch cuts into patch from bottom edge by 27mm
+4. Ground plane should be continuous on bottom layer
+5. No vias needed (simple 2-layer design)
+6. Add 2mm holes at corners for mounting (optional)
+
+CONNECTOR OPTIONS:
+------------------
+Option A: SMA Edge Mount
+  - Solder SMA edge connector to feed line
+  - Ground tabs solder to bottom ground plane
+  - Most robust for testing
+
+Option B: U.FL Connector
+  - Smaller profile
+  - Solder center pin to feed line
+  - Ground ring solders to ground plane via
+  - Good for integration
+
+MANUFACTURING TOLERANCES:
+------------------------
+Standard PCB tolerances (±0.1mm) are acceptable
+This will shift resonance by ±2-3 MHz max (acceptable)
+
+EXPECTED PERFORMANCE (from simulation):
+--------------------------------------
+Resonant Frequency:     ~868 MHz
+Return Loss (S11):      < -20 dB at resonance
+Bandwidth (S11 < -10dB): ~20-30 MHz
+Gain:                   ~6-7 dBi
+Radiation Pattern:      Broadside (perpendicular to PCB)
+Impedance:              50 Ω at resonance
+
+FILE NAMING FOR ORDERING:
+------------------------
+Suggested PCB name: "868MHz_Patch_Antenna_v1"
+Project files location: [Create in KiCad or other tool]
